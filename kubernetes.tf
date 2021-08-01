@@ -21,7 +21,7 @@ resource "kubernetes_deployment" "nginx" {
 
       spec {
         container {
-          name = "nginx"
+          name  = "nginx"
           image = "nginx:latest"
         }
       }
@@ -38,9 +38,9 @@ resource "kubernetes_service" "nginx" {
     selector = {
       name = "nginx"
     }
-    
+
     port {
-      port = 80
+      port        = 80
       target_port = 80
     }
 
