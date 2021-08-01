@@ -7,29 +7,12 @@ terraform {
   }
 }
 
-resource "aws_vpc" "cluster_vpc" {
-  cidr_block = "10.0.0.0/16"
-  tags = {
-    Name = "LAB EKS Cluster"
-  }
-}
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
 
-resource "aws_subnet" "subnet_a" {
-  vpc_id = aws_vpc.cluster_vpc.id
-  cidr_block = "10.0.1.0/24"
-  availability_zone = data.aws_availability_zones.available.names[0]
-
-  tags = {
-    Name = "LAB subnet A"
-  }
-}
-
-resource "aws_subnet" "subnet_b" {
-  vpc_id = aws_vpc.cluster_vpc.id
-  cidr_block = "10.0.2.0/24"
-  availability_zone = data.aws_availability_zones.available.names[1]
-
-  tags = {
-    Name = "LAB subnet B"
-  }
+  name = "lab-cluster-vpc"
+  cidr = "10.0.0.0/16"
+  azs = data.aws_availability_zones.available.names
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 }
