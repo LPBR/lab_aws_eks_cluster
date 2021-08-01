@@ -6,7 +6,3 @@ terraform {
     }
   }
 }
-
-locals {
-  cluster_name = "lab-cluster"
-}
