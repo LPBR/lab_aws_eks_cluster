@@ -8,23 +8,25 @@
   * ## Usage
   * Install terraform dependencies
   * ```
-  * $ terraform init
+  * terraform init
   * ```
   * Previews the execution plan and apply it
   * ```
-  * $ terraform plan
-  * $ terraform apply
+  * terraform plan
+  * ```
+  * ```
+  * terraform apply
   * ```
   * ## Clean up
   * To clean up created resources and avoid costs don't forget to run
   * ```
-  * $ terraform destroy
+  * terraform destroy
   * ```
   * ## Documentation
   * Documentation generated using terraform-docs
   * https://github.com/terraform-docs/terraform-docs
   * ```
-  * $ terraform-docs markdown . | tee README.md
+  * terraform-docs markdown . | tee README.md
   * ```
   */
 
