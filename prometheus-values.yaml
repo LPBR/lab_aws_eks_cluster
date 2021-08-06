@@ -1,0 +1,26 @@
+---
+defaultRules:
+  rules:
+    etcd: False
+    kubeScheduler: False
+    alertmanager: False
+alertmanager:
+  enabled: False
+kubeProxy:
+  enabled: False
+kubeControllerManager:
+  enabled: False
+kubeEtcd:
+  enabled: False
+kubeScheduler:
+  enabled: False
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelector:
+      matchLabels:
+        prometheus: monitoring
+commonLabels:
+  prometheus: monitoring
+grafana:
+  adminPassword: admin123
+...

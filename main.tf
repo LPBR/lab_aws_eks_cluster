@@ -17,6 +17,19 @@
   * ```
   * terraform apply
   * ```
+  * ### Aply kubeconfig
+  * ```
+  * aws eks update-kubeconfig --name eks_lab_cluster --region us-west-1
+  * ```
+  * ### Acessing Grafana
+  * Acess grafana using port forward
+  * ```
+  * kubectl port-forward service/prometheus-community-grafana 3000:80 -n monitoring
+  * ```
+  * Access http://localhost:3000
+  *  > username: admin
+  * 
+  * > password: admin123
   * ## Clean up
   * To clean up created resources and avoid costs don't forget to run
   * ```
