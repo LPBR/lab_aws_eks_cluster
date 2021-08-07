@@ -249,6 +249,7 @@ resource "kubernetes_service" "ping-exporter" {
     name = "ping-exporter"
     namespace = "monitoring"
     labels = {
+      name = "ping-exporter"
       prometheus = "monitoring"
     }
   }
@@ -274,6 +275,7 @@ metadata:
   name: ping-exporter
   namespace: monitoring
   labels:
+    name: ping-exporter
     prometheus: monitoring
 spec:
   selector:
