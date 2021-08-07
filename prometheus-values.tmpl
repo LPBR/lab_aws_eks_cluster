@@ -1,3 +1,4 @@
+---
 defaultRules:
   rules:
     etcd: False
@@ -18,21 +19,9 @@ prometheus:
     serviceMonitorSelector:
       matchLabels:
         prometheus: monitoring
-  additionalScrapeConfigs:
-    - job_name: ping-exporter
-      scrape_interval: 15s
-      kubernetes_sd_configs:
-      relabel_configs:
-      - source_labels: 
-
-      static_configs:
-      %{ for addr in node_addrs ~}
-- targets: ['${addr}:9427']
-        labels:
-          key_name: ${addr}
-      %{ endfor ~}
 
 commonLabels:
   prometheus: monitoring
 grafana:
   adminPassword: admin123
+...
