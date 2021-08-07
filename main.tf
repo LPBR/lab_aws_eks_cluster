@@ -109,7 +109,7 @@ resource "helm_release" "prometheus" {
 
 resource "kubernetes_service_account" "ping_exporter" {
   metadata {
-    name = "ping-exporter"
+    name      = "ping-exporter"
     namespace = "monitoring"
     labels = {
       name = "ping_exporter"
@@ -131,8 +131,8 @@ resource "kubernetes_cluster_role" "ping_exporter" {
 
   rule {
     api_groups = [""]
-    resources = ["nodes"]
-    verbs = ["list"]
+    resources  = ["nodes"]
+    verbs      = ["list"]
   }
 }
 
@@ -146,20 +146,44 @@ resource "kubernetes_cluster_role_binding" "ping_exporter" {
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    kind = "ClusterRole"
-    name = "ping-exporter"
+    kind      = "ClusterRole"
+    name      = "ping-exporter"
   }
 
   subject {
-    kind = "ServiceAccount"
-    name = "ping-exporter"
+    kind      = "ServiceAccount"
+    name      = "ping-exporter"
     namespace = "monitoring"
+  }
+}
+
+resource "kubernetes_config_map" "ping_exporter" {
+  metadata {
+    name      = "ping-exporter"
+    namespace = "monitoring"
+  }
+
+  data = {
+    "config.yml" = <<EOF
+    targets:
+      - 8.8.8.8
+    
+    dns:
+      refresh: 2m15s
+      nameserver: 1.1.1.1
+
+    ping:
+      internaval: 2s
+      timeout: 3s
+      history-size: 42
+      payload-size: 120
+    EOF
   }
 }
 
 resource "kubernetes_daemonset" "ping_exporter" {
   metadata {
-    name = "ping-exporter"
+    name      = "ping-exporter"
     namespace = "monitoring"
     labels = {
       name = "ping_exporter"
@@ -186,30 +210,22 @@ resource "kubernetes_daemonset" "ping_exporter" {
 
         container {
           name  = "ping-exporter"
-          image = "travelping/ping-exporter"
+          image = "czerwonk/ping_exporter"
 
           port {
             container_port = 9427
           }
 
-          env {
-            name  = "PINGEXPORTER_VERSION"
-            value = "1.0"
+          volume_mount {
+            name       = "config"
+            mount_path = "/config"
           }
+        }
 
-          env {
-            name  = "PINGEXPORTER_PING_INTERVAL"
-            value = "5s"
-          }
-
-          env {
-            name  = "PINGEXPORTER_PING_TIMEOUT"
-            value = "4s"
-          }
-
-          env {
-            name  = "PINGEXPORTER_PING_TARGET"
-            value = "8.8.8.8"
+        volume {
+          name = "config"
+          config_map {
+            name = "ping-exporter"
           }
         }
       }
