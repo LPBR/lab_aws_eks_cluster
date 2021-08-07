@@ -67,4 +67,156 @@ module "eks" {
       asg_desired_capacity = 2
     },
   ]
+
+  tags = {
+    name = "lab_cluster"
+  }
+}
+
+resource "kubernetes_namespace" "monitoring" {
+  metadata {
+    name = "monitoring"
+  }
+}
+
+data "aws_instances" "cluster_nodes" {
+  instance_tags = {
+    name = "lab_cluster"
+  }
+
+  depends_on = [
+    module.eks
+  ]
+}
+
+resource "helm_release" "prometheus" {
+  name       = "prometheus-community"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  chart      = "kube-prometheus-stack"
+  version    = "17.1.1"
+
+  create_namespace = true
+  namespace        = "monitoring"
+
+  values = [templatefile("prometheus-values.tmpl", {
+    node_addrs = flatten(data.aws_instances.cluster_nodes.*.private_ips)
+  })]
+
+  depends_on = [
+    kubernetes_namespace.monitoring
+  ]
+}
+
+resource "kubernetes_service_account" "ping_exporter" {
+  metadata {
+    name = "ping-exporter"
+    namespace = "monitoring"
+    labels = {
+      name = "ping_exporter"
+    }
+  }
+
+  depends_on = [
+    kubernetes_namespace.monitoring
+  ]
+}
+
+resource "kubernetes_cluster_role" "ping_exporter" {
+  metadata {
+    name = "ping-exporter"
+    labels = {
+      name = "ping_exporter"
+    }
+  }
+
+  rule {
+    api_groups = [""]
+    resources = ["nodes"]
+    verbs = ["list"]
+  }
+}
+
+resource "kubernetes_cluster_role_binding" "ping_exporter" {
+  metadata {
+    name = "ping-exporter"
+    labels = {
+      name = "ping_exporter"
+    }
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind = "ClusterRole"
+    name = "ping-exporter"
+  }
+
+  subject {
+    kind = "ServiceAccount"
+    name = "ping-exporter"
+    namespace = "monitoring"
+  }
+}
+
+resource "kubernetes_daemonset" "ping_exporter" {
+  metadata {
+    name = "ping-exporter"
+    namespace = "monitoring"
+    labels = {
+      name = "ping_exporter"
+    }
+  }
+
+  spec {
+    selector {
+      match_labels = {
+        name = "ping_exporter"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          name = "ping_exporter"
+        }
+      }
+
+      spec {
+        host_network         = true
+        service_account_name = "ping-exporter"
+
+        container {
+          name  = "ping-exporter"
+          image = "travelping/ping-exporter"
+
+          port {
+            container_port = 9427
+          }
+
+          env {
+            name  = "PINGEXPORTER_VERSION"
+            value = "1.0"
+          }
+
+          env {
+            name  = "PINGEXPORTER_PING_INTERVAL"
+            value = "5s"
+          }
+
+          env {
+            name  = "PINGEXPORTER_PING_TIMEOUT"
+            value = "4s"
+          }
+
+          env {
+            name  = "PINGEXPORTER_PING_TARGET"
+            value = "8.8.8.8"
+          }
+        }
+      }
+    }
+  }
+
+  depends_on = [
+    kubernetes_namespace.monitoring
+  ]
 }
