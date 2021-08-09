@@ -1,10 +1,24 @@
 /**
   * # [LAB] AWS EKS cluster
-  * A laboratory for EKS cluster wiht nodes connection latency monitoring, using Prometheus and Grafana
+  * A laboratory for EKS cluster.
+  * Contains a publicly acessible grafana service, for monitoring data visualization.
+  *
+  * The Prometheus and Grafana deployment is based o kube-prometheus-stack helm chart.
+  * https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+  *
+  * In adition to the community monitoring itens and dasboards, this project contains a service
+  * monitor called ping-exporter.
+  * https://github.com/czerwonk/ping_exporter.
+  *
+  * The ping-exporter service monitor runs as a daemonset, sending ping requests to every node on the cluster,
+  * collecting inter node connectivity data.
+  *
   * ## Dependencies
   * - AWS CLI (https://github.com/aws/aws-cli)
   *   > Execute `$ aws configure ` (https://github.com/aws/aws-cli#configuration)
   * - Terraform (https://learn.hashicorp.com/tutorials/terraform/install-cli)
+  * - kubectl (https://kubernetes.io/docs/tasks/tools/)
+  *
   * ## Usage
   * Install terraform dependencies
   * ```
@@ -21,26 +35,41 @@
   * ```
   * aws eks update-kubeconfig --name eks_lab_cluster --region us-west-1
   * ```
-  * ### Acessing Grafana
-  * Acess grafana using port forward
+  * ## Grafana
+  * Provides several dashboards for visualizaing monitoring information.
+  * 
+  * To access it after running the `terraform apply`, get the Grafana Load Balancer URL with:
   * ```
-  * kubectl port-forward service/prometheus-community-grafana 3000:80 -n monitoring
+  * terraform output grafana_url
   * ```
-  * Access http://localhost:3000
+  * Paste it on your browser an use the following credentials to access it.
+  * 
   *  > username: admin
   * 
-  * > password: admin123
+  *  > password: admin123
+  *
   * ## Clean up
   * To clean up created resources and avoid costs don't forget to run
   * ```
   * terraform destroy
   * ```
-  * ## Documentation
+  * ## References and resources
+  *
   * Documentation generated using terraform-docs
   * https://github.com/terraform-docs/terraform-docs
   * ```
   * terraform-docs markdown . | tee README.md
   * ```
+  *
+  * ### Creating a serviceMonitor for prometheus operator
+  * https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md
+  * https://stackoverflow.com/questions/52991038/how-to-create-a-servicemonitor-for-prometheus-operator
+  *
+  * ### Provisioning a EKS cluster
+  * https://learn.hashicorp.com/tutorials/terraform/eks
+  *
+  * ### AWS EKS cluster with terraform - Examples
+  * https://antonputra.com/category/aws-amazon-web-services/
   */
 
 module "networking" {

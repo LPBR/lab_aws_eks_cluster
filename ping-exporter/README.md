@@ -1,7 +1,12 @@
 # Ping-exporter prometheus serviceMonitor
 ## About
 Creates a prometheusService monitor, based on czerwonk/ping\_exporter.
+
+https://github.com/czerwonk/ping_exporter.
+
 Creates the deamon set, it's configuration file, service\_account, service and serviceMonitor.
+
+https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md#include-servicemonitors
 
 ## Requirements
 

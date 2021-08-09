@@ -2,7 +2,12 @@
   * # Ping-exporter prometheus serviceMonitor
   * ## About
   * Creates a prometheusService monitor, based on czerwonk/ping_exporter.
+  * 
+  * https://github.com/czerwonk/ping_exporter.
+  *
   * Creates the deamon set, it's configuration file, service_account, service and serviceMonitor.
+  * 
+  * https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md#include-servicemonitors
   */
 
 resource "kubernetes_service_account" "ping-exporter" {
