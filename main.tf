@@ -111,3 +111,31 @@ module "ping-exporter" {
     helm_release.prometheus,
   ]
 }
+
+# Publish Grafana to the internet with LoadBalancer
+resource "kubernetes_service" "grafana" {
+  metadata {
+    name      = "grafana"
+    namespace = var.monitoring_namespace
+    labels = {
+      name = "grafana"
+    }
+  }
+
+  spec {
+    selector = {
+      "app.kubernetes.io/name" = "grafana"
+    }
+    port {
+      name        = "web"
+      port        = 80
+      target_port = 3000
+    }
+    type = "LoadBalancer"
+  }
+
+  depends_on = [
+    kubernetes_namespace.monitoring,
+    helm_release.prometheus,
+  ]
+}

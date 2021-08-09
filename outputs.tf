@@ -22,3 +22,8 @@ output "cluster_name" {
   description = "Kubernetes Cluster Name"
   value       = var.cluster_name
 }
+
+output "grafana_url" {
+  description = "Grafana external URL"
+  value       = kubernetes_service.grafana.status.0.load_balancer.0.ingress.0.hostname
+}
