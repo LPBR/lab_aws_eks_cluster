@@ -48,6 +48,7 @@ terraform-docs markdown . | tee README.md
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 3.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | 2.2.0 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | 1.11.3 |
 
 ## Providers
 
@@ -55,6 +56,7 @@ terraform-docs markdown . | tee README.md
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 3.52.0 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.2.0 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.3.2 |
 
 ## Modules
 
@@ -62,20 +64,24 @@ terraform-docs markdown . | tee README.md
 |------|--------|---------|
 | <a name="module_eks"></a> [eks](#module\_eks) | terraform-aws-modules/eks/aws | 17.1.0 |
 | <a name="module_networking"></a> [networking](#module\_networking) | ./networking | n/a |
+| <a name="module_ping-exporter"></a> [ping-exporter](#module\_ping-exporter) | ./ping-exporter | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [helm_release.prometheus](https://registry.terraform.io/providers/hashicorp/helm/2.2.0/docs/resources/release) | resource |
+| [kubernetes_namespace.monitoring](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
 | [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
 | [aws_eks_cluster_auth.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
+| [aws_instances.cluster_nodes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/instances) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the cluster | `string` | `"lab_cluster"` | no |
+| <a name="input_monitoring_namespace"></a> [monitoring\_namespace](#input\_monitoring\_namespace) | Namespace for monitoring resources | `string` | `"monitoring"` | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS region | `string` | `"us-west-1"` | no |
 
 ## Outputs

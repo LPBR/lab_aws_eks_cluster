@@ -76,18 +76,8 @@ module "eks" {
 # Montitoring
 resource "kubernetes_namespace" "monitoring" {
   metadata {
-    name = "monitoring"
+    name = var.monitoring_namespace
   }
-}
-
-data "aws_instances" "cluster_nodes" {
-  instance_tags = {
-    name = "lab_cluster"
-  }
-
-  depends_on = [
-    module.eks
-  ]
 }
 
 # Deploy prometheus with kube-promethues-stack helm chart
@@ -98,7 +88,7 @@ resource "helm_release" "prometheus" {
   version    = "17.1.1"
 
   create_namespace = true
-  namespace        = "monitoring"
+  namespace        = var.monitoring_namespace
 
   # Configuration overwriting some defaul config values
   values = [templatefile("prometheus-values.tmpl", {
@@ -110,178 +100,14 @@ resource "helm_release" "prometheus" {
   ]
 }
 
-# Ping exporter service account
-resource "kubernetes_service_account" "ping-exporter" {
-  metadata {
-    name      = "ping-exporter"
-    namespace = "monitoring"
-    labels = {
-      name = "ping-exporter"
-    }
-  }
+# Deploy ping-exporter serviceMonitor
+module "ping-exporter" {
+  source               = "./ping-exporter"
+  nodes_ips            = flatten(data.aws_instances.cluster_nodes.*.private_ips)
+  monitoring_namespace = var.monitoring_namespace
 
   depends_on = [
-    kubernetes_namespace.monitoring
+    kubernetes_namespace.monitoring,
+    helm_release.prometheus,
   ]
-}
-
-resource "kubernetes_cluster_role" "ping-exporter" {
-  metadata {
-    name = "ping-exporter"
-    labels = {
-      name = "ping-exporter"
-    }
-  }
-
-  rule {
-    api_groups = [""]
-    resources  = ["nodes"]
-    verbs      = ["list"]
-  }
-}
-
-resource "kubernetes_cluster_role_binding" "ping-exporter" {
-  metadata {
-    name = "ping-exporter"
-    labels = {
-      name = "ping-exporter"
-    }
-  }
-
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "ping-exporter"
-  }
-
-  subject {
-    kind      = "ServiceAccount"
-    name      = "ping-exporter"
-    namespace = "monitoring"
-  }
-}
-
-# Ping exporter config map
-resource "kubernetes_config_map" "ping-exporter" {
-  metadata {
-    name      = "ping-exporter"
-    namespace = "monitoring"
-  }
-
-  data = {
-    "config.yml" = <<EOF
-    targets:
-      - 8.8.8.8
-    
-    dns:
-      refresh: 2m15s
-      nameserver: 1.1.1.1
-
-    ping:
-      internaval: 2s
-      timeout: 3s
-      history-size: 42
-      payload-size: 120
-    EOF
-  }
-}
-
-# Ping exporter daemonset
-resource "kubernetes_daemonset" "ping-exporter" {
-  metadata {
-    name      = "ping-exporter"
-    namespace = "monitoring"
-    labels = {
-      name       = "ping-exporter"
-      prometheus = "monitoring"
-    }
-  }
-
-  spec {
-    selector {
-      match_labels = {
-        name = "ping-exporter"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          name = "ping-exporter"
-        }
-      }
-
-      spec {
-        host_network         = true
-        service_account_name = "ping-exporter"
-
-        container {
-          name  = "ping-exporter"
-          image = "czerwonk/ping_exporter"
-
-          port {
-            container_port = 9427
-          }
-
-          volume_mount {
-            name       = "config"
-            mount_path = "/config"
-          }
-        }
-
-        volume {
-          name = "config"
-          config_map {
-            name = "ping-exporter"
-          }
-        }
-      }
-    }
-  }
-
-  depends_on = [
-    kubernetes_namespace.monitoring
-  ]
-}
-
-resource "kubernetes_service" "ping-exporter" {
-  metadata {
-    name = "ping-exporter"
-    namespace = "monitoring"
-    labels = {
-      name = "ping-exporter"
-      prometheus = "monitoring"
-    }
-  }
-
-  spec {
-    selector = {
-        name = "ping-exporter"
-    }
-    port {
-      name = "metrics"
-      port = 9427
-      target_port = 9427
-    }
-    type = "ClusterIP"
-  }
-}
-
-resource "kubectl_manifest" "ping-exporter" {
-  yaml_body = <<YAML
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: ping-exporter
-  namespace: monitoring
-  labels:
-    name: ping-exporter
-    prometheus: monitoring
-spec:
-  selector:
-    matchLabels:
-      name: ping-exporter
-  endpoints:
-    - port: metrics
-  YAML
 }
