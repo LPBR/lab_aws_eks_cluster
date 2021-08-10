@@ -128,9 +128,7 @@ resource "helm_release" "prometheus" {
   namespace        = var.monitoring_namespace
 
   # Configuration overwriting some defaul config values
-  values = [templatefile("prometheus-values.tmpl", {
-    node_addrs = flatten(data.aws_instances.cluster_nodes.*.private_ips)
-  })]
+  values = [file("files/prometheus-values.yaml")]
 
   depends_on = [
     kubernetes_namespace.monitoring
@@ -194,7 +192,7 @@ resource "null_resource" "wait_for_grafana_dns" {
 
 # Publish ping-exporter dashboard
 resource "grafana_dashboard" "ping-exporter" {
-  config_json = file("grafana-dashboard.json")
+  config_json = file("files/grafana-dashboard.json")
 
   depends_on = [
     kubernetes_service.grafana,
