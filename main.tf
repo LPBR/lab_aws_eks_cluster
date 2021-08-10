@@ -157,8 +157,6 @@ resource "kubernetes_service" "grafana" {
     }
   }
 
-  wait_for_load_balancer = true
-
   spec {
     selector = {
       "app.kubernetes.io/name" = "grafana"
@@ -177,11 +175,27 @@ resource "kubernetes_service" "grafana" {
   ]
 }
 
+# Hack to wait for Grafana DNS propagation
+# https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource
+# https://stackoverflow.com/questions/53125583/terraform-wait-for-classic-load-balancers-a-record
+resource "null_resource" "wait_for_grafana_dns" {
+  triggers = {
+    dns_name = kubernetes_service.grafana.status.0.load_balancer.0.ingress.0.hostname
+  }
+
+  provisioner "local-exec" {
+    command = "sleep 120"
+  }
+
+  depends_on = [kubernetes_service.grafana]
+}
+
 # Publish ping-exporter dashboard
 resource "grafana_dashboard" "ping-exporter" {
   config_json = file("grafana-dashboard.json")
 
   depends_on = [
-    kubernetes_service.grafana
+    kubernetes_service.grafana,
+    null_resource.wait_for_grafana_dns,
   ]
 }

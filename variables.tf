@@ -15,5 +15,5 @@ variable "monitoring_namespace" {
 
 variable "worker_nodes" {
   description = "Number of worker nodes"
-  default = 3
+  default     = 3
 }

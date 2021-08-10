@@ -15,3 +15,10 @@ data "aws_instances" "cluster_nodes" {
     module.eks
   ]
 }
+
+data "dns_a_record_set" "grafana_dns" {
+  host = kubernetes_service.grafana.status.0.load_balancer.0.ingress.0.hostname
+  depends_on = [
+    null_resource.wait_for_grafana_dns
+  ]
+}

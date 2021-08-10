@@ -30,6 +30,8 @@ provider "kubectl" {
 }
 
 provider "grafana" {
-  url = "http://${kubernetes_service.grafana.status.0.load_balancer.0.ingress.0.hostname}"
+  url  = "http://${kubernetes_service.grafana.status.0.load_balancer.0.ingress.0.hostname}"
   auth = "admin:admin123"
 }
+
+provider "null" {}

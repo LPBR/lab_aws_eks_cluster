@@ -22,8 +22,13 @@ terraform {
     }
 
     grafana = {
-      source = "grafana/grafana"
+      source  = "grafana/grafana"
       version = "1.13.3"
+    }
+
+    null = {
+      source  = "hashicorp/null"
+      version = "3.1.0"
     }
   }
 }

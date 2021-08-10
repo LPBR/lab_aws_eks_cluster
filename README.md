@@ -85,15 +85,18 @@ https://antonputra.com/category/aws-amazon-web-services/
 | <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 1.13.3 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | 2.2.0 |
 | <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | 1.11.3 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | 3.1.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 3.52.0 |
+| <a name="provider_dns"></a> [dns](#provider\_dns) | 3.2.1 |
 | <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 1.13.3 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.2.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.3.2 |
+| <a name="provider_null"></a> [null](#provider\_null) | 3.1.0 |
 
 ## Modules
 
@@ -111,9 +114,11 @@ https://antonputra.com/category/aws-amazon-web-services/
 | [helm_release.prometheus](https://registry.terraform.io/providers/hashicorp/helm/2.2.0/docs/resources/release) | resource |
 | [kubernetes_namespace.monitoring](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
 | [kubernetes_service.grafana](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service) | resource |
+| [null_resource.wait_for_grafana_dns](https://registry.terraform.io/providers/hashicorp/null/3.1.0/docs/resources/resource) | resource |
 | [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
 | [aws_eks_cluster_auth.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
 | [aws_instances.cluster_nodes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/instances) | data source |
+| [dns_a_record_set.grafana_dns](https://registry.terraform.io/providers/hashicorp/dns/latest/docs/data-sources/a_record_set) | data source |
 
 ## Inputs
 
