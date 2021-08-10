@@ -8,13 +8,14 @@
   * The Prometheus and Grafana deployment is based o kube-prometheus-stack helm chart.
   * https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
   *
-  * In adition to the community monitoring itens and dasboards, this project contains a service
+  * In adition to the community monitoring items and dashboards, this project contains a service
   * monitor called ping-exporter.
   * https://github.com/czerwonk/ping_exporter.
   *
-  * The ping-exporter service monitor runs as a daemonset, sending ping requests to every node on the cluster,
-  * collecting inter node connectivity data.
-  * It's Grafana dashboard is named: `Ping Exporter - Inter node ping statistics`
+  * It runs as a daemonset, sending ping requests to every node on the cluster,
+  * collecting data about connectivity between nodes.
+  * 
+  * A specific Grafana dashboard was created to visualize it, named: `Ping Exporter - Inter node ping statistics`
   *
   * ## Dependencies
   * - AWS CLI (https://github.com/aws/aws-cli)
@@ -27,32 +28,32 @@
   * ```
   * terraform init
   * ```
-  * Previews the execution plan and apply it
+  * Preview the execution plan and apply it
   * ```
   * terraform plan
   * ```
   * ```
   * terraform apply
   * ```
-  * ### Aply kubeconfig
+  * ### Apply kubectl kubeconfig
   * ```
   * aws eks update-kubeconfig --name eks_lab_cluster --region us-west-1
   * ```
   * ## Grafana
-  * Provides several dashboards for visualizaing monitoring information.
+  * Used for data visualization, it's configured with some community dashboards from kube-prometheus-stack
   * 
-  * To access it after running the `terraform apply`, get the Grafana Load Balancer URL with:
+  * To access it, after running the `terraform apply`, get the Grafana Load Balancer URL with:
   * ```
   * terraform output grafana_url
   * ```
-  * Paste it on your browser an use the following credentials to access it.
+  * Paste it on your browser and use the following credentials to access it.
   * 
   *  > username: admin
   * 
   *  > password: admin123
   *
-  * Navigate to Dashboards an search for `Ping Exporter - Inter node ping statistics`.
-  * The source node can be selected on hte NodeIP template variable on the top left connor.
+  * Navigate to Dashboards and search for `Ping Exporter - Inter node ping statistics`.
+  * The source node can be selected on the NodeIP template variable on the top left corner.
   * 
   * ## Clean up
   * To clean up created resources and avoid costs don't forget to run
@@ -69,6 +70,7 @@
   *
   * ### Creating a serviceMonitor for prometheus operator
   * https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/getting-started.md
+  * 
   * https://stackoverflow.com/questions/52991038/how-to-create-a-servicemonitor-for-prometheus-operator
   *
   * ### Provisioning a EKS cluster
