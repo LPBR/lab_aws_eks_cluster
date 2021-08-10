@@ -94,7 +94,6 @@ https://antonputra.com/category/aws-amazon-web-services/
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 3.52.0 |
-| <a name="provider_dns"></a> [dns](#provider\_dns) | 3.2.1 |
 | <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 1.13.3 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.2.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.3.2 |
@@ -120,7 +119,6 @@ https://antonputra.com/category/aws-amazon-web-services/
 | [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
 | [aws_eks_cluster_auth.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
 | [aws_instances.cluster_nodes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/instances) | data source |
-| [dns_a_record_set.grafana_dns](https://registry.terraform.io/providers/hashicorp/dns/latest/docs/data-sources/a_record_set) | data source |
 
 ## Inputs
 
