@@ -12,6 +12,7 @@
   *
   * The ping-exporter service monitor runs as a daemonset, sending ping requests to every node on the cluster,
   * collecting inter node connectivity data.
+  * It's Grafana dashboard is named: `Ping Exporter - Inter node ping statistics`
   *
   * ## Dependencies
   * - AWS CLI (https://github.com/aws/aws-cli)
@@ -48,6 +49,9 @@
   * 
   *  > password: admin123
   *
+  * Navigate to Dashboards an search for `Ping Exporter - Inter node ping statistics`.
+  * The source node can be selected on hte NodeIP template variable on the top left connor.
+  * 
   * ## Clean up
   * To clean up created resources and avoid costs don't forget to run
   * ```
@@ -93,7 +97,7 @@ module "eks" {
     {
       name                 = "worker-group-1"
       instance_type        = "t2.small"
-      asg_desired_capacity = 2
+      asg_desired_capacity = var.worker_nodes
     },
   ]
 
@@ -141,6 +145,11 @@ module "ping-exporter" {
   ]
 }
 
+# Publish ping-exporter dashboard
+resource "grafana_dashboard" "ping-exporter" {
+  config_json = file("grafana-dashboard.json")
+}
+
 # Publish Grafana to the internet with LoadBalancer
 resource "kubernetes_service" "grafana" {
   metadata {
@@ -150,6 +159,8 @@ resource "kubernetes_service" "grafana" {
       name = "grafana"
     }
   }
+
+  wait_for_load_balancer = true
 
   spec {
     selector = {

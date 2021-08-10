@@ -18,6 +18,27 @@ provider "registry.terraform.io/gavinbunney/kubectl" {
   ]
 }
 
+provider "registry.terraform.io/grafana/grafana" {
+  version     = "1.13.3"
+  constraints = "1.13.3"
+  hashes = [
+    "h1:1oNqWeUIgLa3PCDhugC6JJMB6QfFJsdCaIl9w1WWKlM=",
+    "zh:3251c9b409d25183fc28de4a7c79978e60ced59d4e89af45d54f77a525d39356",
+    "zh:380d7c9da6280e652228151d6e903c309a3e713a224a473fd278f3fcb559c55f",
+    "zh:4c7943dd80cf896b572a9c51c9b77175d54e8106c549de4c16968ff3a04d920a",
+    "zh:4fe330e739e53ebf9e7ea2a2aa07c7aa49f0733dd66b7e454ddef5df57b1276b",
+    "zh:6f7f79ef241d154d056b899d2a97864687d5c36ef4ade674fa5ed2bd16348780",
+    "zh:882589c688169426ab8d5fd033ba3c424ffcd380a86c5ff8f1794677f036688b",
+    "zh:a5ce70577dcd4ce62809c14a64f25f6ab5a26b1285283f7a0e33daaaafd978f9",
+    "zh:c2c263c5367665430999d0a233516bafea6dc649f7df4ef9b06e8d16964d603c",
+    "zh:d40ea526c74b72d29645b7d69bde7b5aec0bdec0445f4235bb6a80fc1bf46251",
+    "zh:d997e04cdceced10f650c1b54ba3c501794d1493d7a9a4b59b7d4df2160227dd",
+    "zh:e1b2e72291364ed1105c7cbc899f602a9b600d6c35c855e62faa17a8ce003b30",
+    "zh:f6c4aed6968d955a97c1452de55a37303275ec636a6be9d4b61279047113919c",
+    "zh:fc4599298860ee36947cbd66dbeb3429551bdcc6842f270272c63ef1d2f5f044",
+  ]
+}
+
 provider "registry.terraform.io/hashicorp/aws" {
   version     = "3.52.0"
   constraints = "~> 3.0"

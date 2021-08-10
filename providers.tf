@@ -28,3 +28,8 @@ provider "kubectl" {
   token                  = data.aws_eks_cluster_auth.cluster.token
   load_config_file       = false
 }
+
+provider "grafana" {
+  url = "http://${kubernetes_service.grafana.status.0.load_balancer.0.ingress.0.hostname}"
+  auth = "admin:admin123"
+}

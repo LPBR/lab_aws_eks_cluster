@@ -11,6 +11,7 @@ https://github.com/czerwonk/ping_exporter.
 
 The ping-exporter service monitor runs as a daemonset, sending ping requests to every node on the cluster,
 collecting inter node connectivity data.
+It's Grafana dashboard is named: `Ping Exporter - Inter node ping statistics`
 
 ## Dependencies
 - AWS CLI (https://github.com/aws/aws-cli)
@@ -47,6 +48,9 @@ Paste it on your browser an use the following credentials to access it.
 
  > password: admin123
 
+Navigate to Dashboards an search for `Ping Exporter - Inter node ping statistics`.
+The source node can be selected on hte NodeIP template variable on the top left connor.
+
 ## Clean up
 To clean up created resources and avoid costs don't forget to run
 ```
@@ -76,6 +80,7 @@ https://antonputra.com/category/aws-amazon-web-services/
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 3.0 |
+| <a name="requirement_grafana"></a> [grafana](#requirement\_grafana) | 1.13.3 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | 2.2.0 |
 | <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | 1.11.3 |
 
@@ -84,6 +89,7 @@ https://antonputra.com/category/aws-amazon-web-services/
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 3.52.0 |
+| <a name="provider_grafana"></a> [grafana](#provider\_grafana) | 1.13.3 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.2.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.3.2 |
 
@@ -99,6 +105,7 @@ https://antonputra.com/category/aws-amazon-web-services/
 
 | Name | Type |
 |------|------|
+| [grafana_dashboard.ping-exporter](https://registry.terraform.io/providers/grafana/grafana/1.13.3/docs/resources/dashboard) | resource |
 | [helm_release.prometheus](https://registry.terraform.io/providers/hashicorp/helm/2.2.0/docs/resources/release) | resource |
 | [kubernetes_namespace.monitoring](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
 | [kubernetes_service.grafana](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service) | resource |
@@ -113,6 +120,7 @@ https://antonputra.com/category/aws-amazon-web-services/
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the cluster | `string` | `"lab_cluster"` | no |
 | <a name="input_monitoring_namespace"></a> [monitoring\_namespace](#input\_monitoring\_namespace) | Namespace for monitoring resources | `string` | `"monitoring"` | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS region | `string` | `"us-west-1"` | no |
+| <a name="input_worker_nodes"></a> [worker\_nodes](#input\_worker\_nodes) | Number of worker nodes | `number` | `3` | no |
 
 ## Outputs
 

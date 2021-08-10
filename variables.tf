@@ -12,3 +12,8 @@ variable "monitoring_namespace" {
   description = "Namespace for monitoring resources"
   default     = "monitoring"
 }
+
+variable "worker_nodes" {
+  description = "Number of worker nodes"
+  default = 3
+}
