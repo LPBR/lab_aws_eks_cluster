@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 22,
-  "iteration": 1628557802117,
+  "iteration": 1628564402515,
   "links": [],
   "panels": [
     {
@@ -28,6 +28,7 @@
           },
           "decimals": 2,
           "mappings": [],
+          "max": 800,
           "thresholds": {
             "mode": "absolute",
             "steps": [
