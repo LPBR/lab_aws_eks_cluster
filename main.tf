@@ -3,6 +3,8 @@
   * A laboratory for EKS cluster.
   * Contains a publicly acessible grafana service, for monitoring data visualization.
   *
+  * ![image](https://user-images.githubusercontent.com/8085607/128797001-d729a0cd-4a0e-4117-a7b6-0a7425f4f350.png)
+  *
   * The Prometheus and Grafana deployment is based o kube-prometheus-stack helm chart.
   * https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
   *
@@ -145,11 +147,6 @@ module "ping-exporter" {
   ]
 }
 
-# Publish ping-exporter dashboard
-resource "grafana_dashboard" "ping-exporter" {
-  config_json = file("grafana-dashboard.json")
-}
-
 # Publish Grafana to the internet with LoadBalancer
 resource "kubernetes_service" "grafana" {
   metadata {
@@ -177,5 +174,14 @@ resource "kubernetes_service" "grafana" {
   depends_on = [
     kubernetes_namespace.monitoring,
     helm_release.prometheus,
+  ]
+}
+
+# Publish ping-exporter dashboard
+resource "grafana_dashboard" "ping-exporter" {
+  config_json = file("grafana-dashboard.json")
+
+  depends_on = [
+    kubernetes_service.grafana
   ]
 }

@@ -2,6 +2,8 @@
 A laboratory for EKS cluster.
 Contains a publicly acessible grafana service, for monitoring data visualization.
 
+![image](https://user-images.githubusercontent.com/8085607/128797001-d729a0cd-4a0e-4117-a7b6-0a7425f4f350.png)
+
 The Prometheus and Grafana deployment is based o kube-prometheus-stack helm chart.
 https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
 
